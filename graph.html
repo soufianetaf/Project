@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "P. C. Wells", "label": "P. C. Wells", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Venkataraman", "label": "S. Venkataraman", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Joslin", "label": "D. Joslin", "shape": "dot"}, {"color": "#97c2fc", "id": "G. DeGiacomo", "label": "G. DeGiacomo", "shape": "dot"}, {"color": "#97c2fc", "id": "C. G. Giraud-Carrier", "label": "C. G. Giraud-Carrier", "shape": "dot"}, {"color": "#97c2fc", "id": "H. Haddadi", "label": "H. Haddadi", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Salzberg", "label": "S. Salzberg", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Poole", "label": "D. Poole", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Kambhampati", "label": "S. Kambhampati", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Hara", "label": "M. Hara", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Stone", "label": "P. Stone", "shape": "dot"}, {"color": "#97c2fc", "id": "Y. Shoham", "label": "Y. Shoham", "shape": "dot"}, {"color": "#97c2fc", "id": "N. L. Zhang", "label": "N. L. Zhang", "shape": "dot"}, {"color": "#97c2fc", "id": "Wolfgang Slany", "label": "Wolfgang Slany", "shape": "dot"}, {"color": "#97c2fc", "id": "VS Subrahmanian", "label": "VS Subrahmanian", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Argamon-Engelson", "label": "S. Argamon-Engelson", "shape": "dot"}, {"color": "#97c2fc", "id": "C. H. Papadimitriou", "label": "C. H. Papadimitriou", "shape": "dot"}, {"color": "#97c2fc", "id": "I. W. Phillips", "label": "I. W. Phillips", "shape": "dot"}, {"color": "#97c2fc", "id": "Sabina Petride", "label": "Sabina Petride", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Landa", "label": "R. Landa", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Mundhenk", "label": "M. Mundhenk", "shape": "dot"}, {"color": "#97c2fc", "id": "Juergen Dix", "label": "Juergen Dix", "shape": "dot"}, {"color": "#97c2fc", "id": "T. G. Dietterich", "label": "T. G. Dietterich", "shape": "dot"}, {"color": "#97c2fc", "id": "Francesca Toni", "label": "Francesca Toni", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Markovitch", "label": "S. Markovitch", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Kitani", "label": "T. Kitani", "shape": "dot"}, {"color": "#97c2fc", "id": "V. Bayer-Zubek", "label": "V. Bayer-Zubek", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Tambe", "label": "M. Tambe", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Sebastiani", "label": "R. Sebastiani", "shape": "dot"}, {"color": "#97c2fc", "id": "Rohit Parikh", "label": "Rohit Parikh", "shape": "dot"}, {"color": "#97c2fc", "id": "Fariba Sadri", "label": "Fariba Sadri", "shape": "dot"}, {"color": "#97c2fc", "id": "B. Srivastava", "label": "B. Srivastava", "shape": "dot"}, {"color": "#97c2fc", "id": "M. L. Littman", "label": "M. L. Littman", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Bresina", "label": "J. Bresina", "shape": "dot"}, {"color": "#97c2fc", "id": "Loizos Michael", "label": "Loizos Michael", "shape": "dot"}, {"color": "#97c2fc", "id": "Marc Denecker", "label": "Marc Denecker", "shape": "dot"}, {"color": "#97c2fc", "id": "L. B. Holder", "label": "L. B. Holder", "shape": "dot"}, {"color": "#97c2fc", "id": "I. P. Gent", "label": "I. P. Gent", "shape": "dot"}, {"color": "#97c2fc", "id": "Riccardo Pucella", "label": "Riccardo Pucella", "shape": "dot"}, {"color": "#97c2fc", "id": "A. L. Delcher", "label": "A. L. Delcher", "shape": "dot"}, {"color": "#97c2fc", "id": "J. S. Rosenschein", "label": "J. S. Rosenschein", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Safra", "label": "S. Safra", "shape": "dot"}, {"color": "#97c2fc", "id": "Konstantinos Georgatos", "label": "Konstantinos Georgatos", "shape": "dot"}, {"color": "#97c2fc", "id": "K. Yip", "label": "K. Yip", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Shachter", "label": "R. Shachter", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Singer", "label": "J. Singer", "shape": "dot"}, {"color": "#97c2fc", "id": "Mirco Nanni", "label": "Mirco Nanni", "shape": "dot"}, {"color": "#97c2fc", "id": "G. Provan", "label": "G. Provan", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Gratch", "label": "J. Gratch", "shape": "dot"}, {"color": "#97c2fc", "id": "M. P. Wellman", "label": "M. P. Wellman", "shape": "dot"}, {"color": "#97c2fc", "id": "R. deWolf", "label": "R. deWolf", "shape": "dot"}, {"color": "#97c2fc", "id": "D. R. Wilson", "label": "D. R. Wilson", "shape": "dot"}, {"color": "#97c2fc", "id": "T. J. Hoar", "label": "T. J. Hoar", "shape": "dot"}, {"color": "#97c2fc", "id": "I. H. Witten", "label": "I. H. Witten", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Sideri", "label": "M. Sideri", "shape": "dot"}, {"color": "#97c2fc", "id": "U. Trinchero", "label": "U. Trinchero", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Kasif", "label": "S. Kasif", "shape": "dot"}, {"color": "#97c2fc", "id": "Y. Eriguchi", "label": "Y. Eriguchi", "shape": "dot"}, {"color": "#97c2fc", "id": "L. Finkelstein", "label": "L. Finkelstein", "shape": "dot"}, {"color": "#97c2fc", "id": "H. Kaindl", "label": "H. Kaindl", "shape": "dot"}, {"color": "#97c2fc", "id": "Zygmunt Haas", "label": "Zygmunt Haas", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Wermter", "label": "S. Wermter", "shape": "dot"}, {"color": "#97c2fc", "id": "M. S. Lee", "label": "M. S. Lee", "shape": "dot"}, {"color": "#97c2fc", "id": "A. Moore", "label": "A. Moore", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Bhansali", "label": "S. Bhansali", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Frasconi", "label": "P. Frasconi", "shape": "dot"}, {"color": "#97c2fc", "id": "H. H. Hoos", "label": "H. H. Hoos", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Nishida", "label": "T. Nishida", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Parr", "label": "R. Parr", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Jonsson", "label": "P. Jonsson", "shape": "dot"}, {"color": "#97c2fc", "id": "M. I. Jordan", "label": "M. I. Jordan", "shape": "dot"}, {"color": "#97c2fc", "id": "Pietro Cassara", "label": "Pietro Cassara", "shape": "dot"}, {"color": "#97c2fc", "id": "Nir Friedman", "label": "Nir Friedman", "shape": "dot"}, {"color": "#97c2fc", "id": "G. Bakiri", "label": "G. Bakiri", "shape": "dot"}, {"color": "#97c2fc", "id": "Samir Chopra", "label": "Samir Chopra", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Scerri", "label": "P. Scerri", "shape": "dot"}, {"color": "#97c2fc", "id": "S. K. Murthy", "label": "S. K. Murthy", "shape": "dot"}, {"color": "#97c2fc", "id": "M. J. Pazzani", "label": "M. J. Pazzani", "shape": "dot"}, {"color": "#97c2fc", "id": "R. C. Varnell", "label": "R. C. Varnell", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Hogg", "label": "T. Hogg", "shape": "dot"}, {"color": "#97c2fc", "id": "Joseph Y. Halpern", "label": "Joseph Y. Halpern", "shape": "dot"}, {"color": "#97c2fc", "id": "K. Kyriakopoulos", "label": "K. Kyriakopoulos", "shape": "dot"}, {"color": "#97c2fc", "id": "G. Zlotkin", "label": "G. Zlotkin", "shape": "dot"}, {"color": "#97c2fc", "id": "L. P. Kaelbling", "label": "L. P. Kaelbling", "shape": "dot"}, {"color": "#97c2fc", "id": "M. P. Harper", "label": "M. P. Harper", "shape": "dot"}, {"color": "#97c2fc", "id": "A. Darwiche", "label": "A. Darwiche", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Huang", "label": "J. Huang", "shape": "dot"}, {"color": "#97c2fc", "id": "I. Horswill", "label": "I. Horswill", "shape": "dot"}, {"color": "#97c2fc", "id": "Antonis Kakas", "label": "Antonis Kakas", "shape": "dot"}, {"color": "#97c2fc", "id": "P. M. Murphy", "label": "P. M. Murphy", "shape": "dot"}, {"color": "#97c2fc", "id": "S. H. Nienhuys-Cheng", "label": "S. H. Nienhuys-Cheng", "shape": "dot"}, {"color": "#97c2fc", "id": "Yuliya Lierler", "label": "Yuliya Lierler", "shape": "dot"}, {"color": "#97c2fc", "id": "A. Broggi", "label": "A. Broggi", "shape": "dot"}, {"color": "#97c2fc", "id": "Kostas Stathis", "label": "Kostas Stathis", "shape": "dot"}, {"color": "#97c2fc", "id": "L. H. Ihrig", "label": "L. H. Ihrig", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Berte", "label": "S. Berte", "shape": "dot"}, {"color": "#97c2fc", "id": "N. Indurkhya", "label": "N. Indurkhya", "shape": "dot"}, {"color": "#97c2fc", "id": "W. E. Walsh", "label": "W. E. Walsh", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Minton", "label": "S. Minton", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Dean", "label": "T. Dean", "shape": "dot"}, {"color": "#97c2fc", "id": "H. Chan", "label": "H. Chan", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Hanks", "label": "S. Hanks", "shape": "dot"}, {"color": "#97c2fc", "id": "A. M. Segre", "label": "A. M. Segre", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Cook", "label": "D. Cook", "shape": "dot"}, {"color": "#97c2fc", "id": "N Friedman", "label": "N Friedman", "shape": "dot"}, {"color": "#97c2fc", "id": "M. S. Withall", "label": "M. S. Withall", "shape": "dot"}, {"color": "#97c2fc", "id": "J. D. Park", "label": "J. D. Park", "shape": "dot"}, {"color": "#97c2fc", "id": "M. E. Pollack", "label": "M. E. Pollack", "shape": "dot"}, {"color": "#97c2fc", "id": "J. C. Schlimmer", "label": "J. C. Schlimmer", "shape": "dot"}, {"color": "#97c2fc", "id": "G. Pinkas", "label": "G. Pinkas", "shape": "dot"}, {"color": "#97c2fc", "id": "R. E. Wray", "label": "R. E. Wray", "shape": "dot"}, {"color": "#97c2fc", "id": "Eyal Amir", "label": "Eyal Amir", "shape": "dot"}, {"color": "#97c2fc", "id": "A. W. Moore", "label": "A. W. Moore", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Frank", "label": "J. Frank", "shape": "dot"}, {"color": "#97c2fc", "id": "D. L. Mammen", "label": "D. L. Mammen", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Drummond", "label": "M. Drummond", "shape": "dot"}, {"color": "#97c2fc", "id": "R. N. Behera", "label": "R. N. Behera", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Rio", "label": "M. Rio", "shape": "dot"}, {"color": "#97c2fc", "id": "I. Serina", "label": "I. Serina", "shape": "dot"}, {"color": "#97c2fc", "id": "S. J. Russell", "label": "S. J. Russell", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Heckerman", "label": "D. Heckerman", "shape": "dot"}, {"color": "#97c2fc", "id": "G. A. Kramer", "label": "G. A. Kramer", "shape": "dot"}, {"color": "#97c2fc", "id": "L. Schubert", "label": "L. Schubert", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Mongiello", "label": "M. Mongiello", "shape": "dot"}, {"color": "#97c2fc", "id": "P. vanBeek", "label": "P. vanBeek", "shape": "dot"}, {"color": "#97c2fc", "id": "Deborah East", "label": "Deborah East", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Y. Halpern", "label": "J. Y. Halpern", "shape": "dot"}, {"color": "#97c2fc", "id": "L. K. Saul", "label": "L. K. Saul", "shape": "dot"}, {"color": "#97c2fc", "id": "A. J. Grove", "label": "A. J. Grove", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Cadoli", "label": "M. Cadoli", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Tadepalli", "label": "P. Tadepalli", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Auge", "label": "J. Auge", "shape": "dot"}, {"color": "#97c2fc", "id": "Nan Rong", "label": "Nan Rong", "shape": "dot"}, {"color": "#97c2fc", "id": "D. J. Parish", "label": "D. J. Parish", "shape": "dot"}, {"color": "#97c2fc", "id": "Y. Bengio", "label": "Y. Bengio", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Dechter", "label": "R. Dechter", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Tennenholtz", "label": "M. Tennenholtz", "shape": "dot"}, {"color": "#97c2fc", "id": "L. Stark", "label": "L. Stark", "shape": "dot"}, {"color": "#97c2fc", "id": "Peter D. Grunwald", "label": "Peter D. Grunwald", "shape": "dot"}, {"color": "#97c2fc", "id": "C. G. Nevill-Manning", "label": "C. G. Nevill-Manning", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Marquis", "label": "P. Marquis", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Monderer", "label": "D. Monderer", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Cheeseman", "label": "P. Cheeseman", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Liberatore", "label": "P. Liberatore", "shape": "dot"}, {"color": "#97c2fc", "id": "Y. Vorobeychik", "label": "Y. Vorobeychik", "shape": "dot"}, {"color": "#97c2fc", "id": "G. Gogic", "label": "G. Gogic", "shape": "dot"}, {"color": "#97c2fc", "id": "Nikolay Pelov", "label": "Nikolay Pelov", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Di Noia", "label": "T. Di Noia", "shape": "dot"}, {"color": "#97c2fc", "id": "F. M. Donini", "label": "F. M. Donini", "shape": "dot"}, {"color": "#97c2fc", "id": "S. E. Shimony", "label": "S. E. Shimony", "shape": "dot"}, {"color": "#97c2fc", "id": "D. W. Opitz", "label": "D. W. Opitz", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Veloso", "label": "M. Veloso", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Goldsmith", "label": "J. Goldsmith", "shape": "dot"}, {"color": "#97c2fc", "id": "L. A. Rendell", "label": "L. A. Rendell", "shape": "dot"}, {"color": "#97c2fc", "id": "A. Schaerf", "label": "A. Schaerf", "shape": "dot"}, {"color": "#97c2fc", "id": "Li Li", "label": "Li Li", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Chien", "label": "S. Chien", "shape": "dot"}, {"color": "#97c2fc", "id": "Judea Pearl", "label": "Judea Pearl", "shape": "dot"}, {"color": "#97c2fc", "id": "Z. Ghahramani", "label": "Z. Ghahramani", "shape": "dot"}, {"color": "#97c2fc", "id": "K. Woods", "label": "K. Woods", "shape": "dot"}, {"color": "#97c2fc", "id": "Andreas Raggl", "label": "Andreas Raggl", "shape": "dot"}, {"color": "#97c2fc", "id": "W. Liu", "label": "W. Liu", "shape": "dot"}, {"color": "#97c2fc", "id": "G. Collins", "label": "G. Collins", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Lenzerini", "label": "M. Lenzerini", "shape": "dot"}, {"color": "#97c2fc", "id": "R. I. Brafman", "label": "R. I. Brafman", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Kusters", "label": "R. Kusters", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Pearl", "label": "J. Pearl", "shape": "dot"}, {"color": "#97c2fc", "id": "J. E. Laird", "label": "J. E. Laird", "shape": "dot"}, {"color": "#97c2fc", "id": "D. W. Manchak", "label": "D. W. Manchak", "shape": "dot"}, {"color": "#97c2fc", "id": "Yannis Dimopoulos", "label": "Yannis Dimopoulos", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Soderland", "label": "S. Soderland", "shape": "dot"}, {"color": "#97c2fc", "id": "Paolo Mancarella", "label": "Paolo Mancarella", "shape": "dot"}, {"color": "#97c2fc", "id": "R. J. Mooney", "label": "R. J. Mooney", "shape": "dot"}, {"color": "#97c2fc", "id": "P. Agre", "label": "P. Agre", "shape": "dot"}, {"color": "#97c2fc", "id": "Yi-Min Wang", "label": "Yi-Min Wang", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Gunetti", "label": "D. Gunetti", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Feldman", "label": "R. Feldman", "shape": "dot"}, {"color": "#97c2fc", "id": "Erik T. Mueller", "label": "Erik T. Mueller", "shape": "dot"}, {"color": "#97c2fc", "id": "P. F. Patel-Schneider", "label": "P. F. Patel-Schneider", "shape": "dot"}, {"color": "#97c2fc", "id": "Urszula Chajewska", "label": "Urszula Chajewska", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Singh", "label": "S. Singh", "shape": "dot"}, {"color": "#97c2fc", "id": "M. E. Califf", "label": "M. E. Califf", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Clayton", "label": "R. Clayton", "shape": "dot"}, {"color": "#97c2fc", "id": "S. K. Donoho", "label": "S. K. Donoho", "shape": "dot"}, {"color": "#97c2fc", "id": "F. Zhao", "label": "F. Zhao", "shape": "dot"}, {"color": "#97c2fc", "id": "J. Stutz", "label": "J. Stutz", "shape": "dot"}, {"color": "#97c2fc", "id": "A. Borgida", "label": "A. Borgida", "shape": "dot"}, {"color": "#97c2fc", "id": "V. Weber", "label": "V. Weber", "shape": "dot"}, {"color": "#97c2fc", "id": "F. Bergadano", "label": "F. Bergadano", "shape": "dot"}, {"color": "#97c2fc", "id": "Q. Zhao", "label": "Q. Zhao", "shape": "dot"}, {"color": "#97c2fc", "id": "W. Zhang", "label": "W. Zhang", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Kocka", "label": "T. Kocka", "shape": "dot"}, {"color": "#97c2fc", "id": "S. B. Huffman", "label": "S. B. Huffman", "shape": "dot"}, {"color": "#97c2fc", "id": "S. M. Weiss", "label": "S. M. Weiss", "shape": "dot"}, {"color": "#97c2fc", "id": "D. A. Cohn", "label": "D. A. Cohn", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Jaakkola", "label": "T. Jaakkola", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Schaerf", "label": "M. Schaerf", "shape": "dot"}, {"color": "#97c2fc", "id": "R. G. Clegg", "label": "R. G. Clegg", "shape": "dot"}, {"color": "#97c2fc", "id": "K. M. Ting", "label": "K. M. Ting", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Buchheit", "label": "M. Buchheit", "shape": "dot"}, {"color": "#97c2fc", "id": "L. Hall", "label": "L. Hall", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Walsh", "label": "T. Walsh", "shape": "dot"}, {"color": "#97c2fc", "id": "A. Gerevini", "label": "A. Gerevini", "shape": "dot"}, {"color": "#97c2fc", "id": "Hannaneh Hajishirzi", "label": "Hannaneh Hajishirzi", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Koppel", "label": "M. Koppel", "shape": "dot"}, {"color": "#97c2fc", "id": "Lehnert. W", "label": "Lehnert. W", "shape": "dot"}, {"color": "#97c2fc", "id": "R. Bergmann", "label": "R. Bergmann", "shape": "dot"}, {"color": "#97c2fc", "id": "Victor W. Marek", "label": "Victor W. Marek", "shape": "dot"}, {"color": "#97c2fc", "id": "B. K. Natarajan", "label": "B. K. Natarajan", "shape": "dot"}, {"color": "#97c2fc", "id": "L. Pryor", "label": "L. Pryor", "shape": "dot"}, {"color": "#97c2fc", "id": "T. S. Jaakkola", "label": "T. S. Jaakkola", "shape": "dot"}, {"color": "#97c2fc", "id": "K. Bowyer", "label": "K. Bowyer", "shape": "dot"}, {"color": "#97c2fc", "id": "Rob Miller", "label": "Rob Miller", "shape": "dot"}, {"color": "#97c2fc", "id": "S. Mohanty", "label": "S. Mohanty", "shape": "dot"}, {"color": "#97c2fc", "id": "Paramvir Bahl", "label": "Paramvir Bahl", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Subramanian", "label": "D. Subramanian", "shape": "dot"}, {"color": "#97c2fc", "id": "Stephen B. Wicker", "label": "Stephen B. Wicker", "shape": "dot"}, {"color": "#97c2fc", "id": "Roger Wattenhofer", "label": "Roger Wattenhofer", "shape": "dot"}, {"color": "#97c2fc", "id": "R. E. Schapire", "label": "R. E. Schapire", "shape": "dot"}, {"color": "#97c2fc", "id": "M. Paolucci", "label": "M. Paolucci", "shape": "dot"}, {"color": "#97c2fc", "id": "L. A. Hermens", "label": "L. A. Hermens", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Salmon", "label": "D. Salmon", "shape": "dot"}, {"color": "#97c2fc", "id": "Julia Hockenmaier", "label": "Julia Hockenmaier", "shape": "dot"}, {"color": "#97c2fc", "id": "Miroslaw Truszczynski", "label": "Miroslaw Truszczynski", "shape": "dot"}, {"color": "#97c2fc", "id": "R. A Helzerman", "label": "R. A Helzerman", "shape": "dot"}, {"color": "#97c2fc", "id": "J. W. Shavlik", "label": "J. W. Shavlik", "shape": "dot"}, {"color": "#97c2fc", "id": "W. Wilke", "label": "W. Wilke", "shape": "dot"}, {"color": "#97c2fc", "id": "G. Kainz", "label": "G. Kainz", "shape": "dot"}, {"color": "#97c2fc", "id": "Michael G. Dyer", "label": "Michael G. Dyer", "shape": "dot"}, {"color": "#97c2fc", "id": "T. R. Martinez", "label": "T. R. Martinez", "shape": "dot"}, {"color": "#97c2fc", "id": "D. S. Weld", "label": "D. S. Weld", "shape": "dot"}, {"color": "#97c2fc", "id": "A. Saetti", "label": "A. Saetti", "shape": "dot"}, {"color": "#97c2fc", "id": "D. J. Cook", "label": "D. J. Cook", "shape": "dot"}, {"color": "#97c2fc", "id": "T. Drakengren", "label": "T. Drakengren", "shape": "dot"}, {"color": "#97c2fc", "id": "D. Koller", "label": "D. Koller", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "M. P. Wellman", "to": "W. E. Walsh"}, {"from": "M. P. Wellman", "to": "Y. Vorobeychik"}, {"from": "I. P. Gent", "to": "T. Walsh"}, {"from": "I. P. Gent", "to": "J. Singer"}, {"from": "F. Bergadano", "to": "U. Trinchero"}, {"from": "D. Gunetti", "to": "F. Bergadano"}, {"from": "D. Gunetti", "to": "U. Trinchero"}, {"from": "J. C. Schlimmer", "to": "L. A. Hermens"}, {"from": "J. C. Schlimmer", "to": "P. C. Wells"}, {"from": "F. M. Donini", "to": "M. Buchheit"}, {"from": "F. M. Donini", "to": "M. Cadoli"}, {"from": "F. M. Donini", "to": "P. Liberatore"}, {"from": "F. M. Donini", "to": "M. Schaerf"}, {"from": "F. M. Donini", "to": "M. Mongiello"}, {"from": "F. M. Donini", "to": "T. Di Noia"}, {"from": "A. Schaerf", "to": "M. Buchheit"}, {"from": "A. Schaerf", "to": "F. M. Donini"}, {"from": "A. Schaerf", "to": "M. Tennenholtz"}, {"from": "A. Schaerf", "to": "Y. Shoham"}, {"from": "D. J. Cook", "to": "L. B. Holder"}, {"from": "D. J. Cook", "to": "R. C. Varnell"}, {"from": "M. Koppel", "to": "R. Feldman"}, {"from": "M. Koppel", "to": "S. Argamon-Engelson"}, {"from": "A. M. Segre", "to": "M. Koppel"}, {"from": "A. M. Segre", "to": "R. Feldman"}, {"from": "M. J. Pazzani", "to": "P. M. Murphy"}, {"from": "A. Borgida", "to": "P. F. Patel-Schneider"}, {"from": "A. Borgida", "to": "R. Kusters"}, {"from": "P. F. Patel-Schneider", "to": "R. Sebastiani"}, {"from": "A. J. Grove", "to": "J. Y. Halpern"}, {"from": "A. J. Grove", "to": "D. Koller"}, {"from": "A. J. Grove", "to": "S. Kasif"}, {"from": "A. J. Grove", "to": "A. L. Delcher"}, {"from": "A. J. Grove", "to": "J. Pearl"}, {"from": "J. Y. Halpern", "to": "N Friedman"}, {"from": "D. Koller", "to": "J. Y. Halpern"}, {"from": "D. Koller", "to": "R. Parr"}, {"from": "D. Koller", "to": "S. Venkataraman"}, {"from": "T. Kitani", "to": "Y. Eriguchi"}, {"from": "M. Hara", "to": "T. Kitani"}, {"from": "M. Hara", "to": "Y. Eriguchi"}, {"from": "S. K. Murthy", "to": "S. Kasif"}, {"from": "S. K. Murthy", "to": "S. Salzberg"}, {"from": "S. Kasif", "to": "S. Salzberg"}, {"from": "M. Tennenholtz", "to": "S. Safra"}, {"from": "M. Tennenholtz", "to": "Y. Shoham"}, {"from": "M. Tennenholtz", "to": "R. I. Brafman"}, {"from": "Lehnert. W", "to": "S. Soderland"}, {"from": "J. Bresina", "to": "S. Minton"}, {"from": "J. Bresina", "to": "M. Drummond"}, {"from": "M. Drummond", "to": "S. Minton"}, {"from": "T. G. Dietterich", "to": "V. Bayer-Zubek"}, {"from": "G. Bakiri", "to": "T. G. Dietterich"}, {"from": "S. Hanks", "to": "T. Dean"}, {"from": "D. S. Weld", "to": "S. Hanks"}, {"from": "L. A. Rendell", "to": "S. K. Donoho"}, {"from": "D. Subramanian", "to": "S. J. Russell"}, {"from": "M. Veloso", "to": "P. Stone"}, {"from": "P. Stone", "to": "S. Singh"}, {"from": "P. Stone", "to": "R. E. Schapire"}, {"from": "M. E. Califf", "to": "R. J. Mooney"}, {"from": "R. Bergmann", "to": "W. Wilke"}, {"from": "Q. Zhao", "to": "T. Nishida"}, {"from": "C. G. Giraud-Carrier", "to": "T. R. Martinez"}, {"from": "P. Frasconi", "to": "Y. Bengio"}, {"from": "G. Pinkas", "to": "R. Dechter"}, {"from": "K. Woods", "to": "L. Hall"}, {"from": "K. Woods", "to": "L. Stark"}, {"from": "D. Cook", "to": "K. Woods"}, {"from": "D. Cook", "to": "L. Hall"}, {"from": "D. Cook", "to": "K. Bowyer"}, {"from": "D. Cook", "to": "L. Stark"}, {"from": "L. Hall", "to": "L. Stark"}, {"from": "K. Bowyer", "to": "K. Woods"}, {"from": "K. Bowyer", "to": "L. Hall"}, {"from": "K. Bowyer", "to": "L. Stark"}, {"from": "J. E. Laird", "to": "S. B. Huffman"}, {"from": "J. E. Laird", "to": "R. E. Wray"}, {"from": "A. Broggi", "to": "S. Berte"}, {"from": "D. Heckerman", "to": "R. Shachter"}, {"from": "N. Indurkhya", "to": "S. M. Weiss"}, {"from": "D. W. Manchak", "to": "P. vanBeek"}, {"from": "A. L. Delcher", "to": "S. Kasif"}, {"from": "A. L. Delcher", "to": "J. Pearl"}, {"from": "J. Pearl", "to": "S. Kasif"}, {"from": "L. K. Saul", "to": "T. Jaakkola"}, {"from": "L. K. Saul", "to": "M. I. Jordan"}, {"from": "M. I. Jordan", "to": "T. Jaakkola"}, {"from": "M. I. Jordan", "to": "Z. Ghahramani"}, {"from": "M. I. Jordan", "to": "T. S. Jaakkola"}, {"from": "D. A. Cohn", "to": "M. I. Jordan"}, {"from": "D. A. Cohn", "to": "Z. Ghahramani"}, {"from": "R. deWolf", "to": "S. H. Nienhuys-Cheng"}, {"from": "L. P. Kaelbling", "to": "M. L. Littman"}, {"from": "M. L. Littman", "to": "P. Stone"}, {"from": "M. L. Littman", "to": "M. Mundhenk"}, {"from": "M. L. Littman", "to": "S. Singh"}, {"from": "M. L. Littman", "to": "R. E. Schapire"}, {"from": "A. W. Moore", "to": "L. P. Kaelbling"}, {"from": "A. W. Moore", "to": "M. L. Littman"}, {"from": "A. W. Moore", "to": "R. G. Clegg"}, {"from": "A. W. Moore", "to": "R. Landa"}, {"from": "A. W. Moore", "to": "M. Rio"}, {"from": "A. W. Moore", "to": "M. S. Withall"}, {"from": "A. W. Moore", "to": "I. W. Phillips"}, {"from": "A. W. Moore", "to": "D. J. Parish"}, {"from": "A. W. Moore", "to": "H. Haddadi"}, {"from": "A. W. Moore", "to": "K. Kyriakopoulos"}, {"from": "A. W. Moore", "to": "J. Auge"}, {"from": "A. W. Moore", "to": "R. Clayton"}, {"from": "A. W. Moore", "to": "D. Salmon"}, {"from": "J. Gratch", "to": "S. Chien"}, {"from": "B. K. Natarajan", "to": "P. Tadepalli"}, {"from": "G. Collins", "to": "L. Pryor"}, {"from": "S. Bhansali", "to": "T. J. Hoar"}, {"from": "G. A. Kramer", "to": "S. Bhansali"}, {"from": "G. A. Kramer", "to": "T. J. Hoar"}, {"from": "R. I. Brafman", "to": "S. E. Shimony"}, {"from": "F. Zhao", "to": "K. Yip"}, {"from": "A. Gerevini", "to": "L. Schubert"}, {"from": "A. Gerevini", "to": "A. Saetti"}, {"from": "A. Gerevini", "to": "I. Serina"}, {"from": "G. Zlotkin", "to": "J. S. Rosenschein"}, {"from": "M. P. Harper", "to": "R. A Helzerman"}, {"from": "N. L. Zhang", "to": "W. Liu"}, {"from": "N. L. Zhang", "to": "W. Zhang"}, {"from": "N. L. Zhang", "to": "T. Kocka"}, {"from": "D. Poole", "to": "R. I. Brafman"}, {"from": "D. Poole", "to": "N. L. Zhang"}, {"from": "D. Poole", "to": "H. H. Hoos"}, {"from": "D. R. Wilson", "to": "T. R. Martinez"}, {"from": "S. Wermter", "to": "V. Weber"}, {"from": "G. DeGiacomo", "to": "M. Lenzerini"}, {"from": "I. Horswill", "to": "P. Agre"}, {"from": "A. Darwiche", "to": "G. Provan"}, {"from": "A. Darwiche", "to": "H. Chan"}, {"from": "A. Darwiche", "to": "P. Marquis"}, {"from": "A. Darwiche", "to": "J. D. Park"}, {"from": "A. Darwiche", "to": "J. Huang"}, {"from": "D. W. Opitz", "to": "J. W. Shavlik"}, {"from": "M. E. Pollack", "to": "M. Paolucci"}, {"from": "D. Joslin", "to": "M. E. Pollack"}, {"from": "D. Joslin", "to": "M. Paolucci"}, {"from": "P. Jonsson", "to": "T. Drakengren"}, {"from": "D. L. Mammen", "to": "T. Hogg"}, {"from": "M. Tambe", "to": "P. Scerri"}, {"from": "C. G. Nevill-Manning", "to": "I. H. Witten"}, {"from": "I. H. Witten", "to": "K. M. Ting"}, {"from": "L. H. Ihrig", "to": "S. Kambhampati"}, {"from": "D. Monderer", "to": "M. Tennenholtz"}, {"from": "J. Frank", "to": "P. Cheeseman"}, {"from": "J. Frank", "to": "J. Stutz"}, {"from": "J. Stutz", "to": "P. Cheeseman"}, {"from": "G. Kainz", "to": "H. Kaindl"}, {"from": "G. Gogic", "to": "M. Sideri"}, {"from": "C. H. Papadimitriou", "to": "G. Gogic"}, {"from": "C. H. Papadimitriou", "to": "M. Sideri"}, {"from": "B. Srivastava", "to": "S. Kambhampati"}, {"from": "A. Moore", "to": "M. S. Lee"}, {"from": "L. Finkelstein", "to": "S. Markovitch"}, {"from": "J. Goldsmith", "to": "M. L. Littman"}, {"from": "J. Goldsmith", "to": "M. Mundhenk"}, {"from": "Erik T. Mueller", "to": "Michael G. Dyer"}, {"from": "Erik T. Mueller", "to": "Hannaneh Hajishirzi"}, {"from": "Erik T. Mueller", "to": "Julia Hockenmaier"}, {"from": "Erik T. Mueller", "to": "Eyal Amir"}, {"from": "Andreas Raggl", "to": "Wolfgang Slany"}, {"from": "R. N. Behera", "to": "S. Mohanty"}, {"from": "Juergen Dix", "to": "Mirco Nanni"}, {"from": "Juergen Dix", "to": "VS Subrahmanian"}, {"from": "Mirco Nanni", "to": "VS Subrahmanian"}, {"from": "Mirco Nanni", "to": "Pietro Cassara"}, {"from": "Joseph Y. Halpern", "to": "Judea Pearl"}, {"from": "Joseph Y. Halpern", "to": "Peter D. Grunwald"}, {"from": "Joseph Y. Halpern", "to": "Riccardo Pucella"}, {"from": "Joseph Y. Halpern", "to": "Nan Rong"}, {"from": "Joseph Y. Halpern", "to": "Nir Friedman"}, {"from": "Joseph Y. Halpern", "to": "Urszula Chajewska"}, {"from": "Joseph Y. Halpern", "to": "Li Li"}, {"from": "Joseph Y. Halpern", "to": "Sabina Petride"}, {"from": "Joseph Y. Halpern", "to": "Zygmunt Haas"}, {"from": "Joseph Y. Halpern", "to": "Stephen B. Wicker"}, {"from": "Joseph Y. Halpern", "to": "Paramvir Bahl"}, {"from": "Joseph Y. Halpern", "to": "Yi-Min Wang"}, {"from": "Joseph Y. Halpern", "to": "Roger Wattenhofer"}, {"from": "Marc Denecker", "to": "Victor W. Marek"}, {"from": "Marc Denecker", "to": "Miroslaw Truszczynski"}, {"from": "Marc Denecker", "to": "Nikolay Pelov"}, {"from": "Miroslaw Truszczynski", "to": "Victor W. Marek"}, {"from": "Miroslaw Truszczynski", "to": "Yuliya Lierler"}, {"from": "Deborah East", "to": "Miroslaw Truszczynski"}, {"from": "Antonis Kakas", "to": "Rob Miller"}, {"from": "Antonis Kakas", "to": "Francesca Toni"}, {"from": "Antonis Kakas", "to": "Yannis Dimopoulos"}, {"from": "Antonis Kakas", "to": "Loizos Michael"}, {"from": "Antonis Kakas", "to": "Paolo Mancarella"}, {"from": "Antonis Kakas", "to": "Fariba Sadri"}, {"from": "Antonis Kakas", "to": "Kostas Stathis"}, {"from": "Konstantinos Georgatos", "to": "Samir Chopra"}, {"from": "Konstantinos Georgatos", "to": "Rohit Parikh"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"nodes": {"shape": "dot", "size": 16}, "physics": {"barnesHut": {"gravitationalConstant": -20000, "springLength": 100}, "minVelocity": 0.75}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

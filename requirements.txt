@@ -1,0 +1,9 @@
+requests
+psycopg2-binary
+scispacy
+spacy
+sklearn
+streamlit
+neo4j
+pandas
+biopython
